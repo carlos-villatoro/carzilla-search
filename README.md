@@ -27,7 +27,7 @@ In this section we will build some new routes:
 
 1. `GET /users/login`: this serves up a login form. It should be very much like the form to create a new user, but it should POST to `/users/login` instead of `/users`. Put a link to this route in a nav bar inside layout.ejs.
 1. `POST /users/login`: this receives the login form. It looks up a user based on email, and then it checks if the looked-up-user's password matches the password from the form. If they match, it sets the userId cookie just like when we created a user, then redirects to the root. If they don't match, it re-renders the login form, ideally with an error message.
-1. `GET /users/logout`: this sets the userId cookie to 0 (there will never be a real user with id 0), then renders the homepage.
+1. `GET /users/logout`: this clears out the cookie with , then renders the homepage.
 
 ## Part 3: Loading the user on each request
 On subsequent requests, we want to look up the user from the userId cookie. The first step is to install a cookie parser: `npm i cookie-parser`, then in the middleware section of your server.js:
@@ -67,6 +67,8 @@ Let's take a minute to digest what's going on here:
 
 We can test this out by logging res.locals in any route, and by referring to user in a view file.
 
+We should wrap parts 1 and 2 in an `if (req.cookies.userId)`, so that if no one is logged in, we don't try to look up a user with an id of undefined. What should we set the res.locals.user to if there was no req.cookies.userId?
+
 ## Part 4: Doing something with the logged in user
 Let's do two things with this logged in user:
 1. Modify our nav bar: if there is a logged in user, display 2 links: Log Out and Profile (explained below). If there is no logged in user, display Log In and Sign Up links.
@@ -81,20 +83,58 @@ Right now, there's nothing to stop someone from manually changing their userId c
 ```js
 const encryptedUserId = cryptojs.AES.encrypt(user.id.toString(), 'super secret string')
 const encryptedUserIdString = encryptedUserId.toString()
-// it would be good to log encryptedUserIdString here!
 res.cookie('userId', encryptedUserIdString)
 ```
 1. We also need to decrypt cookies as they come in the door. In our server.js, instead of just plucking the id from cookies:
 ```js
-const decryptedId = cryptoJS.AES.decrypt(req.cookies.userId, 'asdfasdf')
+const decryptedId = cryptoJS.AES.decrypt(req.cookies.userId, 'super secret string')
 const decryptedIdString = decryptedId.toString(cryptoJS.enc.Utf8)
-// try logging decryptedIdString to see if it worked!
 const user = await models.user.findByPk(decryptedIdString)
 ```
-1. We shouldn't actually have our super secret string in our code! If we commit it to github, anyone can look at it and use it to craft cookies. Instead, we should put it into a .env file to keep it secret. This works just like when we put our api keys into a .env file
+1. We shouldn't actually have our super secret string in our code! If we commit it to github, anyone can look at it and use it to craft cookies. Instead, we should put it into a .env file to keep it secret. This works just like when we put our api keys into a .env file.
 
 ### Part 5b: hashing our passwords
-Data security and breaches is a topic that some people devote their entire careers to. We are not those people. But those people advise us that we do not want to store our passwords in our db in plain text. Instead, we should hash them. Hashing is the process of convering a string into an obfuscated string. There is a key difference between hashing and encrypting: something that's been encrypted can be decrypted if you have the secret string. But something that's been hashed can _never_ be recovered into its original string.
+Data security and breaches is a topic that some people devote their entire careers to. We are not those people. But those people advise us that we do not want to store our passwords in our db in plain text. Instead, we should hash them. Hashing is the process of convering a string into an obfuscated string. There is a key difference between hashing and encrypting: something that's been encrypted can be decrypted if you have the secret string. But something that's been hashed can _never_ be recovered into its original string. For this reason we say that hashing is _one-way_.
 
+Here's how we will leverage this:
+1. When a user creates an account, we hash the password that they give us and store that in the db (instead of the plaintext version).
+1. On subsequent login attempts, we hash the password the user is giving us. If that hash matches the hash that we got when they created their account, we have a match! If not we have a failed login attempt.
 
+Actual steps to achieve this:
+1. `npm i bcrypt`
+2.  When we are about to create a user, instead of saving their password, we will hash it first, and then save that hash instead of the plaintext password:
+```js
+// in our require zone
+const bcrypt = require('bcrypt')
+// right before user creation
+const hashedPassword = bcrypt.hashSync('the incoming password', 10)
+// then create the user with the hashedPassword, not the plaintext one
+```
+3. When a user attempts to login, we will hash the password they are attempting to log in with. Then we compare the hashed version of the incoming password to the one we saved in the db when the user was created. bcrypt comes with a built in function to help us with this.
+```js
+// replace 
+if (user.password === req.body.password)
+// with 
+if (bcrypt.compareSync(req.body.password, user.password))
+```
+
+### Part 5c: understanding why we hash our passwords
+Hashing our passwords is a countermeasure in case anyone ever gains access to our db. If our users' plaintext passwords were in there, the breacher could log in as all our users and take any action (withdraw all their money, post harmful content, etc). But if all the breacher has is emails and hashed passwords, they can't log in as our users.
+
+Ok, so let's say that a breacher has our users' emails and hashed passwords. They could use brute force and compare every possible string to the hashed password until they get a match, and then they would know the user's password. For this reason, bcrypt is intentionally designed to take a long time to run (~500ms). Of course, the user will experience this delay when they log into the site, but it's not much time when you just experience it once. But someone trying to brute force every possible string will experience this delay millions of times, making it very expensive to do.
+
+As engineers of the world develop faster and faster computers, a task that takes 500ms today might only take 50ms in the future. So, bcrypt allows you to specify a _cost factor_. When we say `bcrypt.hashSync(req.body.password, 10)`, the 10 means that bcrypt must hash the password, then hash the result of that, then hash the result of that, and so on, 2^10 (1,024) times. It is possible to crank up the cost factor, which will double the amount of time it takes to hash.
+
+Ok, let's say I'm a next-level breacher: I know that brute force guessing passwords takes a long time. But I also know that I can find a list of the 1000 most commonly used passwords. And I can hash them all ahead of time, so that when I am trying to guess hashed passwords, I can just compare them to my pre-hashed list. This pre-hashed list is called a _rainbow table_, and it makes it much more feasible to crack hashed passwords. Rainbow tables are no secret and are widely published, but security engineers have found a defense against them.
+
+Every time bcrypt hashes a password, it first concatenates a _salt_ onto the end. A salt is a randomly generated string that gets saved with the hashed password in the database:
+```
+$2b$10$eKH9xXBxnEVhruGsUoDE2.PCSvwGHBf7cgkPqsXGia/O03NHNI212
+ ^  ^                       ^                 ^
+ |  |                       |                 |
+ | cost factor              |         this last chunk is the actual hash
+ |          everything from the $ to here is salt
+version of bcrypt  
+```
+The purpose of a salt is: let's say that the user made a dumb password like 'Password1234'. This will probably appear in most rainbow tables. But 'Password1234eKH9xXBxnEVhruGsUoDE2.' certainly will not. This post explains the salting process well: https://stackoverflow.com/questions/6832445/how-can-bcrypt-have-built-in-salts
 
