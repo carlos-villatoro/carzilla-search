@@ -27,7 +27,7 @@ In this section we will build some new routes:
 
 1. `GET /users/login`: this serves up a login form. It should be very much like the form to create a new user, but it should POST to `/users/login` instead of `/users`. Put a link to this route in a nav bar inside layout.ejs.
 1. `POST /users/login`: this receives the login form. It looks up a user based on email, and then it checks if the looked-up-user's password matches the password from the form. If they match, it sets the userId cookie just like when we created a user, then redirects to the root. If they don't match, it re-renders the login form, ideally with an error message.
-1. `GET /users/logout`: this clears out the cookie with , then renders the homepage.
+1. `GET /users/logout`: this clears out the cookie with `res.clearCookie()`, then renders the homepage.
 
 ## Part 3: Loading the user on each request
 On subsequent requests, we want to look up the user from the userId cookie. The first step is to install a cookie parser: `npm i cookie-parser`, then in the middleware section of your server.js:
