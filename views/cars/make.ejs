@@ -1,0 +1,7 @@
+<h2> <%= name %> Models</h2>
+
+<ul>
+    <% models.forEach(model =>{ %>
+    <li><a href="/cars/makes/<%= name %>/<%= model.Model_Name %> "><%= model.Model_Name %></a> </li>
+<% }) %>  
+</ul>

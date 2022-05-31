@@ -4,7 +4,9 @@ const rowdy = require('rowdy-logger')
 const cookieParser = require('cookie-parser')
 const db = require('./models')
 const cryptojs = require('crypto-js')
+const { response } = require('express')
 require('dotenv').config()
+const axios = require('axios')
 
 // app config
 const PORT = process.env.PORT || 3000
@@ -23,7 +25,7 @@ app.use((req, res, next)=>{
   console.log(`[${new Date().toLocaleString()}] incoming request: ${req.method} ${req.url}`)
   console.log('request body:', req.body)
   // modify the response to give data to the routes/mw that is 'downstream'
-  res.locals.myData = 'hi i came from a middleware'
+  // res.locals.myData = 'hi i came from a middleware'
   // tell express the middleware is done
   next()
 })
@@ -51,14 +53,14 @@ app.use(async (req, res, next)=>{
 
 // controllers
 app.use('/users', require('./controllers/users'))
-
+app.use('/cars', require('./controllers/cars'))
 // 
 
 // routes
 app.get('/', (req, res) => {
   console.log(res.locals)
-  // throw new Error ('oooooopsss')
-  res.render('index')
+      res.render('index')
+  
 })
 
 // 404 error handler LAST
@@ -83,3 +85,4 @@ app.listen(PORT, () => {
   console.log(`server is running on port ${PORT}`);
   rowdyRes.print()
 })
+
