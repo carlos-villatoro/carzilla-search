@@ -55,6 +55,7 @@ app.use(async (req, res, next)=>{
 app.use('/users', require('./controllers/users'))
 app.use('/cars', require('./controllers/cars'))
 app.use('/trucks', require('./controllers/trucks'))
+app.use('/motorcycles', require('./controllers/motorcycles'))
 // 
 
 // routes
