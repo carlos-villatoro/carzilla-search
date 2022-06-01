@@ -13,15 +13,25 @@ router.get('/makes', (req,res)=>{
     })
 })
 
-router.get('/makes/:name', (req,res)=>{
+
+router.get('/makes/:make', (req,res)=>{
     // console.log(req.params.name)
-    axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${req.params.name}?format=json`)
+    axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformakeyear/make/${req.params.make}/vehicleType/car?format=json`)
     .then(response =>{
       console.log(response.data.Results)
-      res.render('cars/make.ejs', {name: req.params.name,models: response.data.Results})
+      res.render('cars/make.ejs', {make: req.params.name,models: response.data.Results})
     })
 })
 
+router.get('/makes/:make/:model', (req,res)=>{
+    // console.log(req.params.make)
+    // console.log(req.params.model)
+    axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${req.params.make}?format=json`)
+    .then(response =>{
+      console.log(response.data.Results)
+      res.render('cars/models.ejs', {make: req.params.make,model: req.params.model})
+    })
+})
 
 
 module.exports = router

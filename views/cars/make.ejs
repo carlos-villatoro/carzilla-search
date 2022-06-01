@@ -1,7 +1,7 @@
-<h2> <%= name %> Models</h2>
+<h2> <%= models[0].Make_Name %> Models</h2>
 
 <ul>
     <% models.forEach(model =>{ %>
-    <li><a href="/cars/makes/<%= name %>/<%= model.Model_Name %> "><%= model.Model_Name %></a> </li>
+    <li><a href="/cars/makes/<%= models[0].Make_Name %>/<%= model.Model_Name %> "><%= model.Model_Name %></a> </li>
 <% }) %>  
 </ul>
