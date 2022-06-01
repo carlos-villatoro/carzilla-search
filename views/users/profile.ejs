@@ -1,3 +1,8 @@
 <h2>User Profile</h2>
 
 <h3>welcome <%= user.email %> </h3>
+
+<% faves.forEach(fave =>{ %>
+    <h2><%= fave.make %> <%= fave.model %>  </h2>
+     <!-- <a href="/details/<%# fave.imdbID %>">deets</a> -->
+<% }) %> 

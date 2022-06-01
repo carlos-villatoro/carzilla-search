@@ -4,3 +4,19 @@ email:VARCHAR(255)
 password:VARCHAR(255)
 
 sequelize model:create --name user --attributes email:string,password:string
+
+create vehicles model
+
+make:VARCHAR(255)
+model:VARCHAR(255)
+userId: FK ref user.id
+
+sequelize model:create --name vehicles --attributes make:string,model:string,userId:integer
+
+create vehicleUsers model
+
+make:VARCHAR(255)
+model:VARCHAR(255)
+userId: FK ref user.id
+
+sequelize model:create --name vehicles --attributes make:string,model:string,userId:integer

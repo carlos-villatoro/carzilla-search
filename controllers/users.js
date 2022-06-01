@@ -88,13 +88,50 @@ router.get('/logout', (req,res)=>{
     res.redirect('/')
 })
 
-router.get('/profile', (req, res)=>{
+router.get('/profile',async(req, res)=>{
     // check if user is authorized
     if (!res.locals.user){
         res.render('users/login.ejs', {msg: 'please log in to continue'})
         return
     }
-    res.render('users/profile', {user: res.locals.user})
+    const allFaves = await db.vehicles.findAll({
+        where: {
+            userId: res.locals.user.id
+        }
+    })
+    res.render('users/profile', {faves:allFaves, user: res.locals.user})
+})
+
+router.get('/faves', async (req, res)=>{
+    console.log("ID:",res.locals.user.id)
+    // const allFaves = await db.vehicles.findAll({
+    //     where: {
+    //         userId: res.locals.user.id
+    //     }
+    // })
+    console.log(allFaves)
+    res.render('users/profile', {
+      faves: allFaves,
+      user: res.locals.user})
+  })
+  
+router.post('/faves', async(req, res)=>{
+try{
+    if(res.locals.user){
+    await db.vehicles.create({
+        make: req.body.make,
+        model: req.body.model,
+        userId: res.locals.user.id
+    })
+    res.redirect('/users/profile')
+    }
+    else if(!res.locals.user){
+    res.render('users/login.ejs', {msg: 'please log in to continue'})
+    return
+    }
+}  catch (err){
+    console.warn(err)
+}
 })
 
 module.exports = router
