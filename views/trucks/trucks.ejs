@@ -1,0 +1,7 @@
+<h2>Makes for Vehicle Type: Trucks </h2>
+
+<ul>
+    <% makes.forEach(make =>{ %>
+    <li><a href="/trucks/makes/<%= make.MakeName %> "><%= make.MakeName %></a> </li>
+<% }) %>  
+</ul>

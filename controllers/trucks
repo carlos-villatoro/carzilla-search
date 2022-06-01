@@ -6,20 +6,19 @@ const app = express()
 app.set('view engine', 'ejs')
 
 router.get('/makes', (req,res)=>{
-    axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/car?format=json`)
+    axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/GetMakesForVehicleType/truck?format=json`)
     .then(response =>{
       console.log(response.data.Results)
-      res.render('cars/cars.ejs', {makes: response.data.Results})
+      res.render('trucks/trucks.ejs', {makes: response.data.Results})
     })
 })
 
-
 router.get('/makes/:make', (req,res)=>{
-    // console.log(req.params.make)
-    axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformakeyear/make/${req.params.make}/vehicleType/car?format=json`)
+    console.log(req.params.make)
+    axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformakeyear/make/${req.params.make}/vehicleType/truck?format=json`)
     .then(response =>{
       console.log(response.data.Results)
-      res.render('cars/make.ejs', {make: req.params.name,models: response.data.Results})
+      res.render('trucks/make.ejs', {make: req.params.name,models: response.data.Results})
     })
 })
 
@@ -29,10 +28,8 @@ router.get('/makes/:make/:model', (req,res)=>{
     axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${req.params.make}?format=json`)
     .then(response =>{
       console.log(response.data.Results)
-
-      res.render('cars/models.ejs', {make: req.params.make,model: req.params.model})
+      res.render('trucks/models.ejs', {make: req.params.make,model: req.params.model})
     })
 })
-
 
 module.exports = router
