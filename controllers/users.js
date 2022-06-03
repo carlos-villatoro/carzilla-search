@@ -3,11 +3,13 @@ const router = express.Router()
 const db = require('../models')
 const cryptojs = require('crypto-js')
 const bcrypt = require('bcryptjs')
+const url = require('url')
 
 // GET /users/new --  form to create new user
 router.get('/new', (req, res)=>{
     res.render('users/new.ejs', { msg: null })
 })
+
 
 
 // POST /users -- create a new user and redirect to index
@@ -88,6 +90,7 @@ router.get('/logout', (req,res)=>{
     res.redirect('/')
 })
 
+
 router.get('/profile',async(req, res)=>{
     // check if user is authorized
     if (!res.locals.user){
@@ -104,19 +107,15 @@ router.get('/profile',async(req, res)=>{
 
 router.get('/faves', async (req, res)=>{
     console.log("ID:",res.locals.user.id)
-    // const allFaves = await db.vehicles.findAll({
-    //     where: {
-    //         userId: res.locals.user.id
-    //     }
-    // })
-    console.log(allFaves)
     res.render('users/profile', {
       faves: allFaves,
       user: res.locals.user})
-  })
+})
   
 router.post('/faves', async(req, res)=>{
 try{
+    // const url = window.location.search
+    console.log(req.body)
     if(res.locals.user){
     await db.vehicles.create({
         make: req.body.make,
@@ -133,5 +132,7 @@ try{
     console.warn(err)
 }
 })
+
+
 
 module.exports = router

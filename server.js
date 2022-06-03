@@ -65,31 +65,7 @@ app.get('/', (req, res) => {
   
 })
 
-// app.get('/faves', async (req, res)=>{
-//   const allFaves = await db.vehicles.findAll()
-//   console.log(allFaves)
-  // res.render('users/profile', {
-  //   faves: allFaves,
-  //   user: res.locals.user})
-// })
 
-// app.post('/faves', async(req, res)=>{
-//   try{
-//     if(res.locals.user){
-//       await db.vehicles.create({
-//         make: req.body.make,
-//         model: req.body.model
-//       })
-//       res.render('users/profile')
-//     }
-//       else if(!res.locals.user){
-//       res.render('users/login.ejs', {msg: 'please log in to continue'})
-//       return
-//       }
-//   }  catch (err){
-//     console.warn(err)
-//   }
-// })
 
 
 // 404 error handler LAST
