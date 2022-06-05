@@ -117,11 +117,13 @@ try{
     // const url = window.location.search
     console.log(req.body)
     if(res.locals.user){
-    await db.vehicles.create({
-        make: req.body.make,
-        model: req.body.model,
-        userId: res.locals.user.id,
-        url: req.body.url
+    const [vehicle, created] = await db.vehicles.findOrCreate({
+        where: {
+            make: req.body.make,
+            model: req.body.model,
+            userId: res.locals.user.id,
+            url: req.body.url
+        }
     })
     res.redirect('/users/profile')
     }
@@ -134,6 +136,21 @@ try{
 }
 })
 
+router.post('/delete', async(req, res)=>{
+    try {
+        if(res.locals.user){
+           const findUser = await db.user.findAll({
+               where: {
+                   id: res.locals.user.id
+               }, 
+               include: [db.vehicles]
+           }) 
+           console.log(findUser[0].vehicles)
+        }
+    } catch (err) {
+        console.warn(err)
+    }
+})
 
 
 module.exports = router

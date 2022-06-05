@@ -4,4 +4,8 @@
 
 <% faves.forEach(fave =>{ %>
     <a href="<%= fave.url %>"><h2><%= fave.make %> <%= fave.model %></h2></a>
+
+    <form method="POST" action="/users/delete">
+        <button type="submit">Delete</button>
+    </form>
 <% }) %> 
