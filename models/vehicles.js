@@ -17,6 +17,7 @@ module.exports = (sequelize, DataTypes) => {
   vehicles.init({
     make: DataTypes.STRING,
     model: DataTypes.STRING,
+    url: DataTypes.STRING,
     userId: DataTypes.INTEGER
   }, {
     sequelize,
