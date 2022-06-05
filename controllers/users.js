@@ -102,6 +102,7 @@ router.get('/profile',async(req, res)=>{
             userId: res.locals.user.id
         }
     })
+    console.log(allFaves[7].url)
     res.render('users/profile', {faves:allFaves, user: res.locals.user})
 })
 
@@ -120,7 +121,8 @@ try{
     await db.vehicles.create({
         make: req.body.make,
         model: req.body.model,
-        userId: res.locals.user.id
+        userId: res.locals.user.id,
+        url: req.body.url
     })
     res.redirect('/users/profile')
     }

@@ -4,5 +4,8 @@
 <form action="/users/faves" method="POST">
     <input hidden value="<%= make %>" name="make">
     <input hidden value="<%= model %>" name="model">
+    <input hidden value="" id="modelUrl" name="url">
+
     <button type="submit">Add to Faves</button>
+    <script>document.getElementById('modelUrl').value = window.location.pathname;</script>
 </form>
