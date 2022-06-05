@@ -102,7 +102,6 @@ router.get('/profile',async(req, res)=>{
             userId: res.locals.user.id
         }
     })
-    console.log(allFaves[7].url)
     res.render('users/profile', {faves:allFaves, user: res.locals.user})
 })
 
