@@ -13,10 +13,13 @@ userId: FK ref user.id
 
 sequelize model:create --name vehicles --attributes make:string,model:string,userId:integer
 
-create vehicleUsers model
+create comments model
 
-make:VARCHAR(255)
-model:VARCHAR(255)
-userId: FK ref user.id
+userId:FK ref user.id
+vehicleId: Fk ref vehicles.id
+email:
+content: text
+url:
 
-sequelize model:create --name vehicles --attributes make:string,model:string,userId:integer
+sequelize model:create --name comment --attributes userId:integer,vehicleId:integer,email:string,content:text,url:string
+
