@@ -4,12 +4,25 @@
     </div>
 <% } %>
 
-<form action="/users" method="POST">
-    <label for="email">Email:</label> 
-    <input type="email" name="email" id="email" placeholder="enter your email..." required>
-
-    <label for="password">Password:</label>
-    <input type="password" name="password" id="password" placeholder="enter your password..." required>
-
-    <button type="submit">Sign up!</button>
-</form>
+    <!-- Main -->
+    <main >
+        <article>
+          <div>
+            <hgroup>
+              <h1>Create a New Account</h1>
+              <h2>Enter email and password..</h2>
+            </hgroup>
+            <form action="/users/login" method="POST">
+                <input type="email" name="email" id="email" placeholder="enter your email..." required>
+                <input type="password" name="password" id="password" placeholder="enter your password..." required>
+              <fieldset>
+                <label for="remember">
+                  <input type="checkbox" role="switch" id="remember" name="remember">
+                  Remember me
+                </label>
+              </fieldset>
+              <button type="submit" class="contrast" >Sign Up</button>
+            </form>
+        </div>
+        </article>
+      </main><!-- ./ Main -->
