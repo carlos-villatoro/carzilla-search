@@ -6,6 +6,10 @@
     <a href="<%= fave.url %>"><h2><%= fave.make %> <%= fave.model %></h2></a>
 
     <form method="POST" action="/users/delete">
+        <input hidden value="<%= fave.make %>" name="make">
+        <input hidden value="<%= fave.model %>" name="model">
+        <input hidden value="" id="modelUrl" name="url">
+        
         <button type="submit">Delete</button>
     </form>
 <% }) %> 

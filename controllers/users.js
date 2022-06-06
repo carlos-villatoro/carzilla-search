@@ -5,6 +5,7 @@ const cryptojs = require('crypto-js')
 const bcrypt = require('bcryptjs')
 const url = require('url')
 
+
 // GET /users/new --  form to create new user
 router.get('/new', (req, res)=>{
     res.render('users/new.ejs', { msg: null })
@@ -138,14 +139,24 @@ try{
 
 router.post('/delete', async(req, res)=>{
     try {
+        console.log(req.body)
         if(res.locals.user){
-           const findUser = await db.user.findAll({
-               where: {
-                   id: res.locals.user.id
+        //    const findUser = await db.user.findAll({
+        //        where: {
+        //            id: res.locals.user.id
+        //        }, 
+        //        include: [db.vehicles]
+        //    }) 
+          const deleteInst = await db.vehicles.destroy({
+               where : {
+                make: req.body.make,
+                model: req.body.model,
+                userId: res.locals.user.id
                }, 
-               include: [db.vehicles]
-           }) 
-           console.log(findUser[0].vehicles)
+            //    include: [db.vehicles]
+           })
+        //    console.log(findUser[0].vehicles)
+        res.redirect('/users/profile')
         }
     } catch (err) {
         console.warn(err)
