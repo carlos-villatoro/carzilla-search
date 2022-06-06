@@ -165,8 +165,29 @@ router.post('/delete', async(req, res)=>{
 
 router.post('/newComment', async(req, res)=>{
     try {
-        console.log(req.body)
+        const findVehicle = await db.vehicles.findOne({ // use form data
+                where:{
+                    make: req.body.make,
+                    model: req.body.model
+                }
+            })
+        if(res.locals.user){
+            console.log(req.body)
+            
+            console.log(`url:${findVehicle.url}, content:${req.body.content}, email: ${res.locals.user.email}, vehicleId:${findVehicle.id}, userId:${findVehicle.userId}`) //all the info for comment table  
+            const [comment, created] = await db.comment.findOrCreate({
+                where:{
+                    userId:findVehicle.userId,
+                    vehicleId:findVehicle.id,
+                    email:res.locals.user.email,
+                    content:req.body.content,
+                    url:findVehicle.url
+                }
+            })
+        }
+        res.redirect(`${findVehicle.url}`)
         
+
     } catch (err) {
         console.warn(err)
     }
