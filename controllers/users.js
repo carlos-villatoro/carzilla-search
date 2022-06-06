@@ -101,9 +101,20 @@ router.get('/profile',async(req, res)=>{
     const allFaves = await db.vehicles.findAll({
         where: {
             userId: res.locals.user.id
+        },
+        include: [db.comment]
+    })
+    const allComments = await db.comment.findAll({
+        where:{
+            userId: res.locals.user.id
         }
     })
-    res.render('users/profile', {faves:allFaves, user: res.locals.user})
+    console.log(allFaves)
+    res.render('users/profile', {
+        faves:allFaves, 
+        user: res.locals.user,
+        comments:allComments
+    })
 })
 
 router.get('/faves', async (req, res)=>{

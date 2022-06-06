@@ -14,7 +14,11 @@
     </form>
 
     <h5>Comments:</h5>
-    <p>this is a comment</p>
+    <% comments.forEach(comment =>{ %>
+        <p><% if(comment.vehicleId === fave.id){ %>
+                <%= comment.content %> 
+        <% } %>  </p>
+    <% }) %> 
 
     <h5>Create a comment..</h5>
     <form action="/users/newComment" method="POST">
@@ -23,7 +27,7 @@
         <input type="text" id="content" name="content" required>
         <button type="submit">Submit</button>
     </form>
-    
+    <hr>
 <% }) %> 
 
 <!-- 
