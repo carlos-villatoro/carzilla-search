@@ -15,8 +15,11 @@
 <h3>Comments:</h3>
 <hr>
 
-<% comments.forEach(comment=>{ %>
+<% if(comments){ %>
+    <% comments.forEach(comment=>{ %>
     <h4><%= comment.email %> says:</h4>
     <p><%= comment.content %> </p>
     <hr>
 <% }) %> 
+<% } %>
+<!-- && comments.url === vehicles.url -->

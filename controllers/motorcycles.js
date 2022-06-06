@@ -32,18 +32,28 @@ router.get('/makes/:make/:model', async (req,res)=>{
         model: req.params.model
       }
     })
-    const allComments = await db.comment.findAll({
-      where:{
-        vehicleId:allVehicles.id
-      }
-    })
+    // console.log(allVehicles)
     // console.log('this is showing', allVehicles)
     // console.log('this is a comment for the above vehicle', allComments)
-    axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${req.params.make}?format=json`)
-    .then(response =>{
+    if(allVehicles){
+      const allComments = await db.comment.findAll({
+        where:{
+          url: allVehicles.url
+        }
+      }) 
+      // console.log(allComments)
+      axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${req.params.make}?format=json`)
+        .then(response =>{
       // console.log(response.data.Results)
-      res.render('motorcycles/models.ejs', {make: req.params.make,model: req.params.model,comments:allComments})
-    })
+      res.render('motorcycles/models.ejs', {make: req.params.make,model: req.params.model,comments:allComments, vehicles:allVehicles})
+      // console.log(res)
+      })
+    } else {
+      axios.get(`https://vpic.nhtsa.dot.gov/api/vehicles/getmodelsformake/${req.params.make}?format=json`)
+      .then(response =>{
+        res.render('motorcycles/models.ejs', {make: req.params.make,model: req.params.model, comments: null})
+      })
+    }
 })
 
 
