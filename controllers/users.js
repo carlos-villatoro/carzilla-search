@@ -174,6 +174,23 @@ router.post('/delete', async(req, res)=>{
     }
 })
 
+router.post('/delete/comment', async(req,res)=>{
+    try {
+        console.log(req.body.content)
+        if(res.locals.user){
+            deleteCom = await db.comment.destroy({
+                where:{
+                    userId: res.locals.user.id,
+                    content: req.body.content
+                }
+            })
+            res.redirect('/users/profile')
+        }
+    } catch (error) {
+        console.warn(error)
+    }
+})
+
 router.post('/newComment', async(req, res)=>{
     try {
         const findVehicle = await db.vehicles.findOne({ // use form data

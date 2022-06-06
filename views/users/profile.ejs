@@ -10,19 +10,19 @@
         <input hidden value="<%= fave.model %>" name="model">
         <input hidden value="" id="modelUrl" name="url">
         
+        
         <button type="submit">Delete from Favorites</button>
     </form>
 
     <h5>Comments:</h5>
     <% comments.forEach(comment =>{ %>
         <p><% if(comment.vehicleId === fave.id){ %>
-                <%= comment.content %> <form method="POST" action="/users/delete/comment">
-            <input hidden value="<%= fave.make %>" name="make">
-            <input hidden value="<%= fave.model %>" name="model">
-            <input hidden value="" id="modelUrl" name="url">
-            
-            <button type="submit">Delete Comment</button>
-        </form>
+                <%= comment.content %> 
+                <form method="POST" action="/users/delete/comment">
+                    <input hidden value="<%= comment.content %>" name="content">
+                    
+                    <button type="submit">Delete Comment</button>
+                </form>
         <% } %>      
         </p>
     <% }) %> 
