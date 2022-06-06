@@ -163,5 +163,13 @@ router.post('/delete', async(req, res)=>{
     }
 })
 
+router.post('/newComment', async(req, res)=>{
+    try {
+        console.log(req.body)
+        
+    } catch (err) {
+        console.warn(err)
+    }
+})
 
 module.exports = router
