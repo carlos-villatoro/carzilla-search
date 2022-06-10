@@ -3,7 +3,7 @@
 ## Visit Carzilla Search:
 
 <!-- link to site -->
-[Carzilla Search](https://carzilla-search.herokuapp.com/)z
+[Carzilla Search](https://carzilla-search.herokuapp.com/)
 
 ## Description
 ----

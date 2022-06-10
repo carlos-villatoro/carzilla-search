@@ -1,0 +1,29 @@
+<hgroup class="primary">
+    <h2>User Profile</h2>
+</hgroup>
+
+
+<hgroup>
+    <h2>Change your password: </h2>
+
+</hgroup>
+
+<form action="/users/update" method="POST">
+    <input type="password" id="password1" oninput="setPasswordConfirmValidity();" placeholder='New Password'>
+    <input name="password" type="password" id="password2" oninput="setPasswordConfirmValidity();" placeholder='Confirm New Password'>
+    <button type="submit">Save</button>
+</form>
+<script>
+    function setPasswordConfirmValidity(str) {
+        const password1 = document.getElementById('password1');
+        const password2 = document.getElementById('password2');
+
+        if (password1.value === password2.value) {
+             password2.setCustomValidity('');
+        } else {
+            password2.setCustomValidity('Passwords must match');
+        }
+        console.log('password2 customError ', document.getElementById('password2').validity.customError);
+        console.log('password2 validationMessage ', document.getElementById('password2').validationMessage);
+    }
+</script>

@@ -56,6 +56,7 @@ app.use('/users', require('./controllers/users'))
 app.use('/cars', require('./controllers/cars'))
 app.use('/trucks', require('./controllers/trucks'))
 app.use('/motorcycles', require('./controllers/motorcycles'))
+app.use('/vehicles', require('./controllers/vehicles'))
 // 
 
 // routes

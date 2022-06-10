@@ -98,127 +98,26 @@ router.get('/profile',async(req, res)=>{
         res.render('users/login.ejs', {msg: 'please log in to continue'})
         return
     }
-    const allFaves = await db.vehicles.findAll({
-        where: {
-            userId: res.locals.user.id
-        },
-        include: [db.comment]
-    })
-    const allComments = await db.comment.findAll({
-        where:{
-            userId: res.locals.user.id
-        }
-    })
-    console.log(allFaves)
+
     res.render('users/profile', {
-        faves:allFaves, 
         user: res.locals.user,
-        comments:allComments
     })
 })
 
-router.get('/faves', async (req, res)=>{
-    console.log("ID:",res.locals.user.id)
-    res.render('users/profile', {
-      faves: allFaves,
-      user: res.locals.user})
-})
-  
-router.post('/faves', async(req, res)=>{
-try{
-    // const url = window.location.search
-    console.log(req.body)
-    if(res.locals.user){
-    const [vehicle, created] = await db.vehicles.findOrCreate({
-        where: {
-            make: req.body.make,
-            model: req.body.model,
-            userId: res.locals.user.id,
-            url: req.body.url
-        }
-    })
-    res.redirect('/users/profile')
-    }
-    else if(!res.locals.user){
-    res.render('users/login.ejs', {msg: 'please log in to continue'})
-    return
-    }
-}  catch (err){
-    console.warn(err)
-}
+router.get('/update', async(req, res)=>{
+    console.log('updateeeeeee')
+    res.render('users/update')
 })
 
-router.post('/delete', async(req, res)=>{
-    try {
-        console.log(req.body)
-        if(res.locals.user){
-        //    const findUser = await db.user.findAll({
-        //        where: {
-        //            id: res.locals.user.id
-        //        }, 
-        //        include: [db.vehicles]
-        //    }) 
-          const deleteInst = await db.vehicles.destroy({
-               where : {
-                make: req.body.make,
-                model: req.body.model,
-                userId: res.locals.user.id
-               }, 
-            //    include: [db.vehicles]
-           })
-        //    console.log(findUser[0].vehicles)
-        res.redirect('/users/profile')
-        }
-    } catch (err) {
-        console.warn(err)
-    }
-})
-
-router.post('/delete/comment', async(req,res)=>{
-    try {
-        console.log(req.body.content)
-        if(res.locals.user){
-            deleteCom = await db.comment.destroy({
-                where:{
-                    userId: res.locals.user.id,
-                    content: req.body.content
-                }
-            })
-            res.redirect('/users/profile')
-        }
-    } catch (error) {
-        console.warn(error)
-    }
-})
-
-router.post('/newComment', async(req, res)=>{
-    try {
-        const findVehicle = await db.vehicles.findOne({ // use form data
-                where:{
-                    make: req.body.make,
-                    model: req.body.model
-                }
-            })
-        if(res.locals.user){
-            console.log(req.body)
-            
-            console.log(`url:${findVehicle.url}, content:${req.body.content}, email: ${res.locals.user.email}, vehicleId:${findVehicle.id}, userId:${findVehicle.userId}`) //all the info for comment table  
-            const [comment, created] = await db.comment.findOrCreate({
-                where:{
-                    userId:findVehicle.userId,
-                    vehicleId:findVehicle.id,
-                    email:res.locals.user.email,
-                    content:req.body.content,
-                    url:findVehicle.url
-                }
-            })
-        }
-        res.redirect(`${findVehicle.url}`)
-        
-
-    } catch (err) {
-        console.warn(err)
-    }
+router.post('/update', async(req,res)=>{
+    console.log('updated sir!')
+    const user = res.locals.user
+    // console.log(user, req.body.password, user.password)
+    const hashedPassword = bcrypt.hashSync(req.body.password, 12)
+    // console.log(hashedPassword)
+    user.password = hashedPassword
+    await user.save()
+    res.redirect('./profile')
 })
 
 module.exports = router

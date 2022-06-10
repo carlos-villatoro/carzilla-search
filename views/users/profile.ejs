@@ -5,46 +5,12 @@
 
 <hgroup>
     <h2>Welcome <%= user.email %> </h2>
-    <h3>These are the vehicles you have favorited ...</h3>
 
 </hgroup>
-<% faves.forEach(fave =>{ %>
-<article>
-    
-    <a href="<%= fave.url %>"><h4><%= fave.make %> <%= fave.model %></h4></a>
 
-    
-    <h5>Comments:</h5>
-    <% comments.forEach(comment =>{ %>
-        <p><% if(comment.vehicleId === fave.id){ %>
-                <%= comment.content %> 
-                <form method="POST" action="/users/delete/comment">
-                    <input hidden value="<%= comment.content %>" name="content">
-                    
-                    <button role="small button" class="secondary outline" type="submit">Delete Comment</button>
-                </form>
-        <% } %>      
-        </p>
-    <% }) %> 
+<a href="/vehicles/faves"><button role="small button" >Faves</button></button></a>
+<a href="/users/update"><button role="small button" >Update Password</button></button></a>
 
-    <h5>Create a comment..</h5>
-    <form action="/users/newComment" method="POST">
-        <input hidden value="<%= fave.make %>" name="make">
-        <input hidden value="<%= fave.model %>" name="model">
-        <input type="text" id="content" name="content" required>
-        <button type="submit">Submit</button>
-    </form>
-
-<form method="POST" action="/users/delete">
-        <input hidden value="<%= fave.make %>" name="make">
-        <input hidden value="<%= fave.model %>" name="model">
-        <input hidden value="" id="modelUrl" name="url">
-        
-        
-        <button  type="submit">Delete from Favorites</button>
-    </form>
-</article>    
-<% }) %> 
 
 
 
