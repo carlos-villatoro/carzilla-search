@@ -1,5 +1,10 @@
 # Carzilla Search
 
+## Visit Carzilla Search:
+
+<!-- link to site -->
+[Carzilla Search](https://carzilla-search.herokuapp.com/)z
+
 ## Description
 ----
 Carzilla is the newest vehicle forum available. Using information from the National Highway Traffic Safety Administration (NTHSA), a user can find almost any vehicle imaginable and share their thoughts on them. If a user does not know exactly what vehicle they want to look up, the user can search based off multiple attributes such as vehicle type, make, model, and combinations of each. Users can then view associated comments for specific vehicles. 
@@ -24,12 +29,19 @@ Carzilla Search will use the Product Information Catalog Vehicle Listing (vPIC) 
     * Crypto-JS
 * Heroku Deployment
 
-There are no dependecies to install with this api. 
+## Project Set-up
+----
+* Fork and Clone down project from Github
+* Use 'npm i' to install dependecies used in project
+* Create a '.env' file
+    * add a 'ENC_KEY' and give it a value, this will act as the encryption key for authentication
+* Create database either named the same as in config.json or create a unique nmae for both
+    * using the terminal, 'createdb (db name)'
+* Create the models using sequelize
+    * 'sequelize model:create' with name and attributes matching those in the models folders
+    * migrate models with 'sequelize db:migrate'
+* Project is now ready to deploy
 
-## Visit Carzilla Search:
-
-<!-- link to site -->
-[Carzilla Search](https://carzilla-search.herokuapp.com/)
 
 ## ERDs
 -------
